@@ -14,10 +14,14 @@ def _req(term, results, lang, start, proxies, timeout, safe, ssl_verify, region)
         params={
             "q": term,
             "num": results,
-            "hl": lang,
+            "hl": lang,     # user interface lang
             "start": start,
             "safe": safe,
-            "gl": region,
+            "gl": region,   # results specific to geo location
+            "pws": 0,       # turn off personal results
+            "tbs": "qdr:d", # last day
+            "udm": 14, # TODO decide whether to use &udm=14
+            "lr": "lang_de",# pages in german
         },
         proxies=proxies,
         timeout=timeout,
