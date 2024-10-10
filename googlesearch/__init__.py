@@ -13,7 +13,7 @@ def _req(term, results, lang, start, proxies, timeout, safe, ssl_verify, region)
         },
         params={
             "q": term,
-            "num": results + 2,  # Prevents multiple requests
+            "num": results,
             "hl": lang,
             "start": start,
             "safe": safe,
@@ -24,8 +24,8 @@ def _req(term, results, lang, start, proxies, timeout, safe, ssl_verify, region)
         verify=ssl_verify,
     )
     resp.raise_for_status()
+    print(resp.request.path_url)
     return resp
-
 
 class SearchResult:
     def __init__(self, url, title, description):
@@ -49,6 +49,7 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
 
     while fetched_results < num_results:
         # Send request
+        print(num_results - start, start)
         resp = _req(term, num_results - start,
                     lang, start, proxies, timeout, safe, ssl_verify, region)
 
@@ -84,5 +85,5 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
             #print(f"Only {fetched_results} results found for query requiring {num_results} results. Moving on to the next query.")
             break  # Break the loop if no new results were found in this iteration
 
-        start += 10  # Prepare for the next set of results
+        start += fetched_results  # Prepare for the next set of results
         sleep(sleep_interval)
